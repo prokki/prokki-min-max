@@ -61,6 +61,7 @@
  * @property {object}  _options                 - properties of SelectableTable
  * @property {string}  _options.attr_min_max    - attribute specifying the type of the number input field - either "min" or "max"
  * @property {string}  _options.attr_min_max_id - attribute specifying the unique id of depending input number fields
+ * @property {integer} _options.diff            - ...
  *
  * @constructor
  */
@@ -90,7 +91,8 @@ var prokkiMinMax = function ($element, options)
  */
 prokkiMinMax.DEFAULTS = {
 	attr_min_max: "data-min-max",
-	attr_min_max_id: "data-min-max-id"
+	attr_min_max_id: "data-min-max-id",
+	diff: 0
 };
 
 prokkiMinMax.prototype._initializeOptions = function (options)
@@ -111,7 +113,8 @@ prokkiMinMax.prototype._initializeElements = function ($element)
 
 	if ( fields.length !== 2 )
 	{
-		throw new Error("more than two elements detected with attribute " + this._options.attr_min_max_id + "='" + this._id + "'");
+		var msg = "more than two elements detected with attribute " + this._options.attr_min_max_id + "='" + this._id + "'";
+		throw new Error(msg);
 	}
 
 	if (
@@ -151,6 +154,6 @@ prokkiMinMax.prototype._initializeEvents = function ()
 
 prokkiMinMax.prototype.reset = function ()
 {
-	this.$_elementMin.attr("max", this.$_elementMax.val());
-	this.$_elementMax.attr("min", this.$_elementMin.val());
+	this.$_elementMin.attr("max", parseInt(this.$_elementMax.val()) - this._options.diff);
+	this.$_elementMax.attr("min", parseInt(this.$_elementMin.val()) + this._options.diff);
 };
